@@ -1,0 +1,43 @@
+<template>
+    <Header></Header>
+    
+    <section class="content-wrapper">
+        <v-main class="main-wrapper" style="height: 100%; padding-top: 72px;">
+            <router-view></router-view>
+        </v-main>
+    </section>
+    
+</template>
+
+<script setup lang="ts">
+
+    import { onMounted } from 'vue';
+    import { useUserStore } from '../store/modules/user';
+
+    import router from '../router';
+
+    import Header from '../components/Header.vue';
+
+    const userStore = useUserStore();
+
+    onMounted(async() => {
+        await userStore.getCurrentUser().then(() => {
+            router.push({ name: 'Catalog' });
+        });
+    })
+    
+</script>
+
+<style scoped>
+
+    .content-wrapper {
+        height: 100vh;
+        padding: 0 100px;
+    }
+
+    .main-wrapper {
+        background-color: rgb(255, 255, 255);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+</style>
