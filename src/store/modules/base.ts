@@ -1,18 +1,26 @@
 import { defineStore } from 'pinia';
 
-import type { AdminState } from '../types';
+import type { BaseState } from '../types';
 import { categoryApi } from '../../api/category';
 import { productApi } from '../../api/product';
 
 import type { ICategory } from '../../interfaces/CategoryInterface';
 import type { IProduct } from '../../interfaces/ProductInterface'
-const defaultState: AdminState = {
+import type { ICatalogFilter } from '../../interfaces/CatalogFilterInterface';
+
+const defaultState: BaseState = {
     categories: [],
-    products: []
+    products: [],
+    filter: {
+        title: null,
+        categoryId: null,
+        minCost: null,
+        maxCost: null
+    }
 };
 
 export const useBaseStore = defineStore('base-store', {
-    state: (): AdminState => defaultState,
+    state: (): BaseState => defaultState,
     actions: {
 
         // -------------------------------- CATEGORIES --------------------------------
@@ -28,7 +36,6 @@ export const useBaseStore = defineStore('base-store', {
         getCategoryByTitle(title: string): ICategory | undefined {
             return this.categories.find(category => category.title === title);
         },
-
         getCategoryById(id: number): ICategory | undefined {
             return this.categories.find(category => category.id === id);
         },
@@ -37,7 +44,7 @@ export const useBaseStore = defineStore('base-store', {
 
         async getProducts() {
             try {
-                const response = await productApi.getProducts();
+                const response = await productApi.getProducts(this.filter);
                 this.products = response.data.map((product: IProduct) => {
                     return {
                         id: product.id,
@@ -53,5 +60,23 @@ export const useBaseStore = defineStore('base-store', {
             }
         },
         // -------------------------------- ORDERS --------------------------------
+
+        // -------------------------------- FILTER --------------------------------
+
+        async updateFilter(filter: ICatalogFilter) {
+            localStorage.setItem('filter', JSON.stringify(filter));
+            this.loadFilter();
+        },
+        async loadFilter() {
+            const filter = JSON.parse(localStorage.getItem('filter') || '{}');
+
+            if (filter === '{}') {
+                this.filter = defaultState.filter;
+            } else {
+                this.filter = filter;
+            }
+
+            await this.getProducts();
+        }
     }
 })

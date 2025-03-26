@@ -4,7 +4,7 @@
             <h1>Каталог</h1>
         </div>
         <div class="filter-form">
-            <FilterForm></FilterForm>
+            <FilterForm :drawer="drawer"></FilterForm>
         </div>
         <div class="product-list">
             <ProductCard v-for="product in products" :key="product.id" :product="product"></ProductCard>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted } from 'vue';
+    import { ref } from 'vue';
     import { storeToRefs } from 'pinia';
 
     import { useBaseStore } from '../store/modules/base';
@@ -24,11 +24,7 @@
     const baseStore = useBaseStore();
     const { products } = storeToRefs(baseStore);
 
-    onMounted(async() => {
-        await baseStore.getCategories().then(() => {
-            baseStore.getProducts();
-        });
-    })
+    const drawer = ref(false);
 
 </script>
 

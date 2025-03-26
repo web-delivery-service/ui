@@ -1,11 +1,20 @@
 import axios from 'axios';
 
 import type { IProduct, IProductCreate, IProductUpdate } from '../interfaces/ProductInterface';
+import type { ICatalogFilter } from '../interfaces/CatalogFilterInterface';
+
 import { apiUrl } from '../lib/axios';
 
 export const productApi = {
-    async getProducts() {
-        return await axios.get<IProduct[]>(`${apiUrl}/products`);
+    async getProducts(filter: ICatalogFilter) {
+        return await axios.get<IProduct[]>(`${apiUrl}/products`, {
+            params: {
+                title: filter.title,
+                categoryId: filter.categoryId,
+                minCost: filter.minCost,
+                maxCost: filter.maxCost
+            }
+        });
     },
 
     async createProduct(item: IProductCreate, accessToken: string | null) {
