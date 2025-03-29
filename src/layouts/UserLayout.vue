@@ -13,16 +13,21 @@
 
     import { onMounted } from 'vue';
     import { useUserStore } from '../store/modules/user';
+    import { useCartStore } from '../store/modules/cart';
 
     import router from '../router';
 
     import Header from '../components/Header.vue';
 
     const userStore = useUserStore();
+    const cartStore = useCartStore();
 
     onMounted(async() => {
         await userStore.getCurrentUser().then(() => {
-            router.push({ name: 'Catalog' });
+            cartStore.getCart();
+            if (router.currentRoute.value.name === 'Login' || router.currentRoute.value.name === 'Register' || router.currentRoute.value.name === 'Home') {
+                router.push({ name: 'Catalog' });
+            }
         });
     })
     

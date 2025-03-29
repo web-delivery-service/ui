@@ -3,10 +3,13 @@ import { defineStore } from 'pinia';
 import type { BaseState } from '../types';
 import { categoryApi } from '../../api/category';
 import { productApi } from '../../api/product';
+import { cartApi } from '../../api/cart';
 
 import type { ICategory } from '../../interfaces/CategoryInterface';
 import type { IProduct } from '../../interfaces/ProductInterface'
 import type { ICatalogFilter } from '../../interfaces/CatalogFilterInterface';
+
+import { useUserStore } from './user';
 
 const defaultState: BaseState = {
     categories: [],
@@ -16,7 +19,9 @@ const defaultState: BaseState = {
         categoryId: null,
         minCost: null,
         maxCost: null
-    }
+    },
+    cart: null,
+    cartQuantity: 0
 };
 
 export const useBaseStore = defineStore('base-store', {

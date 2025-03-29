@@ -3,13 +3,15 @@
         <div>
             <img src="../../../public/logo.png" width="44" alt="logo">
         </div>
-        <div>
+        <div style="display: flex; gap: 20px;">
             <h1 style="opacity: 0.9;">DELIVERY SERVICE</h1>
+            <v-btn class="header-catalog-btn" size="large" variant="outlined" color="green" :to="{ name: 'Catalog' }">Каталог</v-btn>
         </div>
 
         <div class="header-actions-auth" v-if="user">
-            <div>
-                <v-btn icon="mdi-cart" variant="text" @click="openCart"></v-btn>
+            <div style="position: relative;">
+                <v-btn icon="mdi-cart" variant="text" :to="{ name: 'Cart' }"></v-btn>
+                <span v-show="cartQuantity > 0" class="cart-quantity">{{ cartQuantity }}</span>
             </div>
             <div>
                 <v-btn icon="mdi-account" variant="text" :to="{ name: 'Profile' }"></v-btn>
@@ -20,27 +22,27 @@
                 <v-btn icon="mdi-login" variant="text" :to="{ name: 'Login' }"></v-btn>
             </div>
         </div>
-
-        <CartDrawer :drawer="drawer"></CartDrawer>
     </header>
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { onMounted } from 'vue';
+    
     import { storeToRefs } from 'pinia';
 
     import { useUserStore } from '../store/modules/user';
-    import CartDrawer from './cart/CartDrawer.vue';
+    import { useCartStore } from '../store/modules/cart';
 
 
     const userStore = useUserStore();
+    const cartStore = useCartStore();
+
     const { user } = storeToRefs(userStore);
+    const { cartQuantity } = storeToRefs(cartStore);
 
-    const drawer = ref(false);
-
-    const openCart = () => {
-        drawer.value = !drawer.value;
-    }
+    onMounted(async() => {
+        await cartStore.getCart();
+    })
     
 </script>
 
@@ -60,6 +62,25 @@
         margin-left: auto;
         display: flex;
         gap: 10px;
+    }
+
+    .header-catalog-btn {
+        margin-top: 3px;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .cart-quantity {
+        display: inline-block;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 7px;
+        font-size: 12px;
+        position: absolute;
+        top: 0px;
+        left: 30px;
+        font-weight: bold;
     }
 
 </style>

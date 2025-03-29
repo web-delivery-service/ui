@@ -7,6 +7,8 @@ import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
+
 import router from './router'
 import './style.css'
 import App from './App.vue'
@@ -21,4 +23,4 @@ const vuetify = createVuetify({
     }
 });
 
-createApp(App).use(router).use(pinia).use(vuetify).mount('#app')
+createApp(App).use(router).use(pinia).use(vuetify).use(autoAnimatePlugin).mount('#app')

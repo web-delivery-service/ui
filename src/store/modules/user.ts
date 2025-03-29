@@ -2,11 +2,15 @@ import { defineStore } from 'pinia';
 
 import type { UserState } from '../types';
 import { authApi } from '../../api/auth';
+import { userApi } from '../../api/user';
 import router from '../../router';
 
 import type { IUser } from '../../interfaces/UserInterface';
+import type { IProfile } from '../../interfaces/ProfileInterface';
 import type { IRegisterUser, ILoginUser, JWT } from '../../interfaces/AuthInterface';
 import { UserRoleEnum } from '../../interfaces/enums/UserRoleEnum';
+
+import { useCartStore } from './cart';
 
 
 const defaultState: UserState = {
@@ -77,6 +81,19 @@ export const useUserStore = defineStore('user-store', {
             this.accessToken = null;
             this.isAdmin = false;
             this.user = null;
+            useCartStore().clearCart();
+        },
+
+        // ------------------ CRUD ------------------
+
+        async updateProfile(data: IProfile) {
+            try {
+                await userApi.updateProfile(data, this.accessToken).then(() => {
+                    this.getCurrentUser();
+                })
+            } catch (error) {
+                throw error;
+            }
         }
     }
 })

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@mdi/font": "^7.4.47",
     "@tailwindcss/vite": "^4.0.9",
     "axios": "^1.8.1",
