@@ -17,6 +17,10 @@ export const productApi = {
         });
     },
 
+    async getAllProducts() {
+        return await axios.get<IProduct[]>(`${apiUrl}/products`);
+    },
+
     async createProduct(item: IProductCreate, accessToken: string | null) {
         return await axios.post<IProduct>(`${apiUrl}/products`, item, {
             headers: {

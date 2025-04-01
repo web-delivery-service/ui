@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import type { AdminState } from '../types';
 import { categoryApi } from '../../api/category';
 import { productApi } from '../../api/product';
+import { orderApi } from '../../api/order';
 
 import { useUserStore } from './user';
 
@@ -12,7 +13,9 @@ import type { IProductCreate, IProduct, IProductUpdate } from '../../interfaces/
 
 const defaultState: AdminState = {
     categories: [],
-    products: []
+    products: [],
+    orders: [],
+    orderItems: []
 };
 
 export const useAdminStore = defineStore('admin-store', {
@@ -72,7 +75,7 @@ export const useAdminStore = defineStore('admin-store', {
 
         async getProducts() {
             try {
-                const response = await productApi.getProducts();
+                const response = await productApi.getAllProducts();
                 this.products = response.data.map((product: IProduct) => {
                     return {
                         id: product.id,
@@ -141,5 +144,23 @@ export const useAdminStore = defineStore('admin-store', {
 
 
         // -------------------------------- ORDERS --------------------------------
+
+        async getOrders() {
+            try {
+                const response = await orderApi.getAllOrders(useUserStore().accessToken);
+                this.orders = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async getOrderItemsByOrderId(orderId: number) {
+            try {
+                const response = await orderApi.getItemsByOrderId(orderId, useUserStore().accessToken);
+                this.orderItems = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
     }
 })

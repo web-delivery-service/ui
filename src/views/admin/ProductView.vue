@@ -124,11 +124,6 @@
         editingProduct.value = product;
         editDialog.value = true;
     }
-
-    onMounted(async() => {
-        await adminStore.getCategories();
-        await adminStore.getProducts();
-    })
 </script>
 
 <style scoped>

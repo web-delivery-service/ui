@@ -9,6 +9,9 @@
         </div>
 
         <div class="header-actions-auth" v-if="user">
+            <div>
+                <v-btn icon="mdi-truck-delivery" variant="text" :to="{ name: 'UserOrders' }"></v-btn>
+            </div>
             <div style="position: relative;">
                 <v-btn icon="mdi-cart" variant="text" :to="{ name: 'Cart' }"></v-btn>
                 <span v-show="cartQuantity > 0" class="cart-quantity">{{ cartQuantity }}</span>

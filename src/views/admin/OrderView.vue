@@ -19,38 +19,86 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- <tr
-                    v-for="category in categories"
-                    :key="category.id"
+                <tr
+                    v-for="order in orders"
+                    :key="order.id"
                     align="center"
                 >
-                    <td>{{ category.id }}</td>
-                    <td>{{ category.title }}</td>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.user.name }}</td>
+                    <td style="max-width: 100px;">{{ order.user.address }}</td>
+                    <td>{{ order.cost }}</td>
                     <td>
-                        <div class="action-btns" style="text-align: center;">
-                            <v-btn
-                                variant="text"
-                                color="primary"
-                                icon="mdi-pencil"
-                                @click="editCategory(member)"
-                            />
-                            <v-btn
-                                variant="text"
-                                color="red"
-                                icon="mdi-delete"
-                                @click="deleteCategory(member.id)"
-                            />
+                        <div class="status" :class="order.status" style="text-align: center;">
+                            {{ order.status }}
                         </div>
                     </td>
-                </tr> -->
+                    <td>
+                        <div class="info" style="text-align: center;">
+                            <v-btn icon="mdi-food" color="green" variant="text" @click="openInfo(order)"></v-btn>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </v-table>
-        <!-- <AddMemberForm v-if="dialog" :dialog="dialog" @close-dialog="closeDialog"></AddMemberForm>
-        <EditMemberForm v-if="editDialog" :dialog="editDialog" :member="editingMember" @close-dialog="closeDialog"></EditMemberForm> -->
+        <v-dialog
+            v-model="dialog"
+            max-width="600"
+        >
+            <v-card>
+                <v-card-title>Товары</v-card-title>
+                <v-card-text>
+                    <v-table fixed-header height="100%">
+                        <thead>
+                            <tr>
+                                <th 
+                                v-for="col in productColumns" 
+                                :key="col.field"
+                                style="text-align: center;"
+                                >
+                                {{ col.label }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="item in orderItemsProducts"
+                                :key="item['id']"
+                                align="center"
+                            >
+                                <td>{{ item['id'] }}</td>
+                                <td>{{ item['title'] }}</td>
+                                <td>{{ item['quantity'] }}</td>
+                            </tr>
+                        </tbody>
+                    </v-table>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="green"
+                        variant="text"
+                        @click="dialog = false"
+                    >
+                        Закрыть
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </section>
 </template>
 
 <script setup lang="ts">
+    import { ref, computed } from 'vue';
+    import { storeToRefs } from 'pinia';
+
+    import { useAdminStore } from '../../store/modules/admin';
+
+    const adminStore = useAdminStore();
+
+    const { orders, orderItems, products } = storeToRefs(adminStore);
+
+    const dialog = ref(false);
 
     const columns = [
         {
@@ -59,17 +107,61 @@
             field: 'id',
         },
         {
+            name: 'name',
+            label: 'Имя',
+            field: 'name',
+        },
+        {
+            name: 'address',
+            label: 'Адрес',
+            field: 'address',
+        },
+        {
             name: 'cost',
             label: 'Стоимость',
             field: 'cost',
         },
         {
-            name: 'action',
-            label: 'Действие',
-            field: 'action',
+            name: 'status',
+            label: 'Статус',
+            field: 'status',
+        },
+        {
+            name: 'info',
+            label: 'Товары',
+            field: 'info',
         },
     ];
 
+    const productColumns = [
+        {
+            name: 'id',
+            label: 'ID',
+            field: 'id',
+        },
+        {
+            name: 'title',
+            label: 'Название',
+            field: 'title',
+        },
+        {
+            name: 'quantity',
+            label: 'Кол-во',
+            field: 'quantity',
+        },
+    ];
+
+    const orderItemsProducts = computed(() => {
+        return orderItems.value.map(item => {
+            return products.value.find(product => product.id === item.productId);
+        })
+    })
+
+    const openInfo = async(order: any) => {
+        await adminStore.getOrderItemsByOrderId(order.id).then(() => {
+            dialog.value = true;
+        })
+    }
 
 </script>
 

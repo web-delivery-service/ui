@@ -102,10 +102,6 @@
         editDialog.value = true;
     }
 
-    onMounted(async() => {
-        await adminStore.getCategories();
-    })
-
 </script>
 
 <style scoped>

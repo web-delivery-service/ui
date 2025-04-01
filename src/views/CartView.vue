@@ -12,7 +12,7 @@
                     ></CartProductCard>
                 </div>
                 <div class="cart-product-list-total">
-                    <v-form v-if="user" class="cart-user-info">
+                    <v-form v-if="user" class="cart-user-info" fast-fail @submit.prevent="createOrder">
                         <div class="cart-user-info-item">
                             <p>Имя: <span style="font-weight: bold;">{{ user.name }}</span> <span class="error" v-if="!user.name">Необходимо заполнить</span></p>
                         </div>
@@ -39,6 +39,7 @@
     import { useCartStore } from '../store/modules/cart';
     import { useBaseStore } from '../store/modules/base';
     import { useUserStore } from '../store/modules/user';
+    import { useOrderStore } from '../store/modules/order';
 
     import CartProductCard from '../components/cart/CartProductCard.vue';
     
@@ -48,6 +49,7 @@
     const cartStore = useCartStore();
     const baseStore = useBaseStore();
     const userStore = useUserStore();
+    const orderStore = useOrderStore();
 
     const { cartItems } = storeToRefs(cartStore);
     const { products } = storeToRefs(baseStore);
@@ -76,6 +78,10 @@
     const cartProducts = computed(() => {
         return products.value.filter(product => cartItems.value.find(cartItem => cartItem.productId === product.id));
     })
+
+    const createOrder = async () => {
+        await orderStore.createOrder(orderCreate);
+    }
 
     onMounted(async () => {
         await userStore.getCurrentUser().then(() => {
