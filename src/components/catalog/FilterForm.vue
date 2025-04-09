@@ -5,8 +5,8 @@
             temporary
             class="filter-form"
         >
-            <div class="filter-open-btn">
-                <v-btn icon="mdi-filter" color="black" @click.stop="drawer = !drawer"></v-btn>
+            <div :class="getFilterButtonClass">
+                <v-btn :icon="getFilterButtonIcon" :color="getFilterButtonColor" @click.stop="drawer = !drawer"></v-btn>
             </div>
 
             <div class="filter-title">
@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { storeToRefs } from 'pinia';
 
     import type { ICatalogFilter } from '../../interfaces/CatalogFilterInterface';
@@ -87,6 +87,30 @@
         baseStore.updateFilter(filterData.value);
     }
 
+    const getFilterButtonColor = computed(() => {
+        if (filter.value.categoryId || filter.value.title || filter.value.minCost || filter.value.maxCost) {
+            return 'yellow';
+        } else {
+            return 'black';
+        }
+    })
+
+    const getFilterButtonClass = computed(() => {
+        if (drawer.value) {
+            return 'filter-open-btn filter-open-btn-active';
+        } else {
+            return 'filter-open-btn';
+        }
+    })
+
+    const getFilterButtonIcon = computed(() => {
+        if (drawer.value) {
+            return 'mdi-close';
+        } else {
+            return 'mdi-filter';
+        }
+    })
+
     onMounted(async () => {
         await baseStore.getCategories().then(() => {
             baseStore.loadFilter();
@@ -107,8 +131,14 @@
     }
 
     .filter-open-btn {
+        transition: all 0.3s ease-in-out;
         position: fixed;
         top: 90px;
+        left: 270px;
+    }
+
+    .filter-open-btn-active {
+        top: 10px;
         left: 270px;
     }
 

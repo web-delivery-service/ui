@@ -53,7 +53,7 @@
 
                             <v-file-input
                                 v-model="imageFile"
-                                accept="image/png, image/jpeg, image/bmp, image/jpg"
+                                accept="image/png, image/jpeg, image/bmp, image/jpg, image/webp"
                                 label="Картинка"
                                 clearable
                             ></v-file-input>
@@ -126,6 +126,7 @@
         }
         productCreateForm.categoryId = await adminStore.getCategoryByTitle(productCreateForm.categoryId)?.id;
         await adminStore.createProduct(productCreateForm).then((productId) => {
+            console.log(productId);
             if (imageFile.value) {
                 adminStore.uploadProductImage(imageFile.value, productId).then(() => {
                     closeDialog();

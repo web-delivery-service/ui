@@ -3,6 +3,8 @@ import axios from 'axios';
 import type { IOrder, IOrderCreate } from '../interfaces/OrderInterface';
 import type { IOrderItem, IOrderItemCreate } from '../interfaces/OrderItemInterface';
 
+import { OrderStatusEnum } from '../interfaces/enums/OrderStatusEnum';
+
 import { apiUrl } from '../lib/axios';
 
 export const orderApi = {
@@ -37,4 +39,20 @@ export const orderApi = {
             }
         });
     },
+
+    async updateStatus(orderId: number, status: OrderStatusEnum, accessToken: string | null) {
+        return await axios.patch(`${apiUrl}/orders/${orderId}/status`, { status }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+    },
+
+    async deleteOrder(orderId: number, accessToken: string | null) {
+        return await axios.delete(`${apiUrl}/orders/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+    }
 };

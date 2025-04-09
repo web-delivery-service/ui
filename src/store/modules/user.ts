@@ -74,7 +74,7 @@ export const useUserStore = defineStore('user-store', {
                 });
             } catch (error) {
                 this.logoutUser();
-                router.push({ name: 'Login' });
+                router.push({ name: 'Catalog' });
             }
         },
         clearUserData() {

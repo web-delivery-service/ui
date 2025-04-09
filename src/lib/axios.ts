@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const apiUrl = "http://localhost:8000/api/v1";
-export const S3_URL = "https://2bd46b48-5071-4796-b3dc-154f777c11c6.selstorage.ru/";
+export const S3_URL = "https://8550b56c-0f5c-48cb-9e3f-ff7817b0cfe3.selstorage.ru/";
 export const S3_ITEM_TYPE = ".webp";
 
 axios.defaults.withCredentials = true;

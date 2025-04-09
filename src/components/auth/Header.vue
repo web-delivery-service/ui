@@ -1,7 +1,7 @@
 <template>
     <header class="header" style="background-color: white;">
-        <div>
-            <img src="../../../public/logo.png" width="44" alt="logo">
+        <div @click="goHome">
+            <img class="header-logo" src="../../../public/logo.png" width="44" alt="logo">
         </div>
         <div>
             <h1 style="opacity: 0.9">DELIVERY SERVICE</h1>
@@ -10,6 +10,12 @@
 </template>
 
 <script setup lang="ts">
+
+    import router from '../../router';
+
+    const goHome = () => {
+        router.push({ name: 'Catalog' });    
+    }
     
 </script>
 
@@ -23,6 +29,12 @@
         font-family: 'Courier New', Courier, monospace;
         display: flex;
         gap: 20px;
+    }
+
+    .header-logo:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+        transition: all 0.2s;
     }
 
 </style>

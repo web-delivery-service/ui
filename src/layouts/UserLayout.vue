@@ -36,11 +36,11 @@
 <style scoped>
 
     .content-wrapper {
-        height: 100vh;
         padding: 0 100px;
     }
 
     .main-wrapper {
+        min-height: 100vh;
         background-color: rgb(255, 255, 255);
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
     }

@@ -1,11 +1,5 @@
 <template>
-    <section class="admin-member-wrapper">
-        <div class="add-member-btn">
-            <v-btn color="green" @click="dialog = true" prepend-icon="mdi-plus">
-                Добавить
-            </v-btn>
-        </div>
-        
+    <section class="admin-member-wrapper">        
         <v-table fixed-header height="100vh">
             <thead>
                 <tr>
@@ -29,9 +23,12 @@
                     <td style="max-width: 100px;">{{ order.user.address }}</td>
                     <td>{{ order.cost }}</td>
                     <td>
-                        <div class="status" :class="order.status" style="text-align: center;">
-                            {{ order.status }}
+                        <div :class="order.status" style="text-align: center;" @click="updateStatus(order)">
+                            {{ getStatusTitle(order.status) }}
                         </div>
+                        <span>
+                            <v-btn :disabled="order.status != 'DELIVERED'" icon="mdi-delete" color="red" variant="text" @click="deleteOrder(order)"></v-btn>
+                        </span>
                     </td>
                     <td>
                         <div class="info" style="text-align: center;">
@@ -62,13 +59,13 @@
                         </thead>
                         <tbody>
                             <tr
-                                v-for="item in orderItemsProducts"
-                                :key="item['id']"
+                                v-for="item in orderItems"
+                                :key="item.productId"
                                 align="center"
                             >
-                                <td>{{ item['id'] }}</td>
-                                <td>{{ item['title'] }}</td>
-                                <td>{{ item['quantity'] }}</td>
+                                <td>{{ item.productId }}</td>
+                                <td>{{ products.find(product => product.id === item.productId)?.title }}</td>
+                                <td>{{ item.quantity }}</td>
                             </tr>
                         </tbody>
                     </v-table>
@@ -93,6 +90,7 @@
     import { storeToRefs } from 'pinia';
 
     import { useAdminStore } from '../../store/modules/admin';
+    import { OrderStatusEnum } from '../../interfaces/enums/OrderStatusEnum';
 
     const adminStore = useAdminStore();
 
@@ -151,16 +149,41 @@
         },
     ];
 
-    const orderItemsProducts = computed(() => {
-        return orderItems.value.map(item => {
-            return products.value.find(product => product.id === item.productId);
-        })
-    })
+    const getStatusTitle = (status: string) => {
+        switch (status) {
+            case 'PROCESS':
+                return 'ГОТОВИТСЯ';
+            case 'ONTHEWAY':
+                return 'В ПУТИ';
+            case 'DELIVERED':
+                return 'ДОСТАВЛЕН';
+        }
+    }
 
     const openInfo = async(order: any) => {
         await adminStore.getOrderItemsByOrderId(order.id).then(() => {
             dialog.value = true;
         })
+    }
+
+    const updateStatus = async(order: any) => {
+        let status: OrderStatusEnum = order.status;
+        switch (order.status) {
+            case OrderStatusEnum.PROCESS:
+                status = OrderStatusEnum.ONTHEWAY;
+                break;
+            case OrderStatusEnum.ONTHEWAY:
+                status = OrderStatusEnum.DELIVERED;
+                break;
+            case OrderStatusEnum.DELIVERED:
+                return;
+        }
+        
+        await adminStore.updateStatus(order.id, status);
+    }
+
+    const deleteOrder = async(order: any) => {
+        await adminStore.deleteOrder(order.id);
     }
 
 </script>
@@ -169,6 +192,36 @@
 
     .admin-member-wrapper {
         padding: 10px;
+    }
+
+    .PROCESS {
+        background-color: #FFC107;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+        width: 250px;
+    }
+
+    .ONTHEWAY {
+        background-color: #5b4caf;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+        width: 250px;
+    }
+
+    .DELIVERED {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        opacity: 0.5;
+        display: inline-block;
+        width: 250px;
     }
 
 </style>

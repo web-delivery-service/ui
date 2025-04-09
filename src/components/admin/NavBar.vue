@@ -48,6 +48,11 @@
             title: 'Заказы',
             route: 'Orders',
         },
+        {
+            icon: 'mdi-chart-bar',
+            title: 'Статистика',
+            route: 'Stats',
+        },
     ]
 
 </script>

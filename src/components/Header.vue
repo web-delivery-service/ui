@@ -1,7 +1,7 @@
 <template>
-    <header class="header" style="background-color: white;">
-        <div>
-            <img src="../../../public/logo.png" width="44" alt="logo">
+    <header class="header" style="background-color: white; z-index: 100;">
+        <div @click="goHome">
+            <img style="cursor: pointer;" src="../../../public/logo.png" width="44" alt="logo">
         </div>
         <div style="display: flex; gap: 20px;">
             <h1 style="opacity: 0.9;">DELIVERY SERVICE</h1>
@@ -9,8 +9,9 @@
         </div>
 
         <div class="header-actions-auth" v-if="user">
-            <div>
+            <div style="position: relative;">
                 <v-btn icon="mdi-truck-delivery" variant="text" :to="{ name: 'UserOrders' }"></v-btn>
+                <span v-show="orders.length > 0" class="order-quantity">{{ orders.length }}</span>
             </div>
             <div style="position: relative;">
                 <v-btn icon="mdi-cart" variant="text" :to="{ name: 'Cart' }"></v-btn>
@@ -35,17 +36,30 @@
 
     import { useUserStore } from '../store/modules/user';
     import { useCartStore } from '../store/modules/cart';
+    import { useOrderStore } from '../store/modules/order';
+
+    import router from '../router';
 
 
     const userStore = useUserStore();
     const cartStore = useCartStore();
+    const orderStore = useOrderStore();
 
     const { user } = storeToRefs(userStore);
     const { cartQuantity } = storeToRefs(cartStore);
+    const { orders } = storeToRefs(orderStore);
 
     onMounted(async() => {
-        await cartStore.getCart();
+        await userStore.getCurrentUser().then(() => {
+            cartStore.getCart().then(() => {
+                orderStore.getOrdersByUserId(user.value.id);
+            });
+        });
     })
+
+    const goHome = () => {
+        router.push({ name: 'Catalog' });
+    }
     
 </script>
 
@@ -74,6 +88,19 @@
     }
 
     .cart-quantity {
+        display: inline-block;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 7px;
+        font-size: 12px;
+        position: absolute;
+        top: 0px;
+        left: 30px;
+        font-weight: bold;
+    }
+
+    .order-quantity {
         display: inline-block;
         background-color: red;
         color: white;

@@ -6,13 +6,15 @@ import type { ICart } from "../interfaces/CartInterface";
 import type { ICartItem } from "../interfaces/CartItemInterface";
 import type { IOrderItem } from "../interfaces/OrderItemInterface";
 import type { IOrder } from "../interfaces/OrderInterface";
+import type { IStats } from "../interfaces/StatsInterface";
 
 
 export interface AdminState {
     categories: ICategory[];
     products: IProduct[];
     orders: IOrder[];
-    orderItems: IOrderItem[]
+    orderItems: IOrderItem[];
+    stats: IStats | null;
 }
 
 export interface UserState {

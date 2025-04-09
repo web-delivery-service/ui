@@ -4,18 +4,22 @@ import type { AdminState } from '../types';
 import { categoryApi } from '../../api/category';
 import { productApi } from '../../api/product';
 import { orderApi } from '../../api/order';
+import { statsApi } from '../../api/stats';
 
 import { useUserStore } from './user';
 
 import type { ICategoryCreate, ICategory, ICategoryUpdate } from '../../interfaces/CategoryInterface';
 import type { IProductCreate, IProduct, IProductUpdate } from '../../interfaces/ProductInterface';
+import type { IStatsFilter } from '../../interfaces/StatsInterface';
+import { OrderStatusEnum } from '../../interfaces/enums/OrderStatusEnum';
 
 
 const defaultState: AdminState = {
     categories: [],
     products: [],
     orders: [],
-    orderItems: []
+    orderItems: [],
+    stats: null,
 };
 
 export const useAdminStore = defineStore('admin-store', {
@@ -90,25 +94,26 @@ export const useAdminStore = defineStore('admin-store', {
                 console.error(error);
             }
         },
-        async createProduct(item: IProductCreate) {
+        async createProduct(item: IProductCreate): Promise<number | undefined> {
             try {
-                const accessToken = useUserStore().accessToken
-                await productApi.createProduct(item, accessToken).then((response) => {
-                    this.getProducts()
-                    return response.data.id
-                });
+                const accessToken = useUserStore().accessToken;
+                const response = await productApi.createProduct(item, accessToken);
+                await this.getProducts();
+                return response.data.id;
             } catch (error) {
                 console.error(error);
+                return undefined;
             }
         },
         async updateProduct(item: IProductUpdate, itemId: number) {
             try {
-                const accessToken = useUserStore().accessToken
-                await productApi.updateProduct(item, itemId, accessToken).then((response) => {
-                    this.getProducts()
-                });
+                const accessToken = useUserStore().accessToken;
+                const response = await productApi.updateProduct(item, itemId, accessToken);
+                await this.getProducts();
+                return response.data.id;
             } catch (error) {
                 console.error(error);
+                return undefined;
             }
         },
         async deleteProduct(itemId: number) {
@@ -162,5 +167,37 @@ export const useAdminStore = defineStore('admin-store', {
                 console.error(error);
             }
         },
+
+        async updateStatus(orderId: number, status: OrderStatusEnum) {
+            try {
+                await orderApi.updateStatus(orderId, status, useUserStore().accessToken).then(() => {
+                    this.getOrders()
+                })
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        async deleteOrder(orderId: number) {
+            try {
+                await orderApi.deleteOrder(orderId, useUserStore().accessToken).then(() => {
+                    this.getOrders()
+                })
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        // ------------------------------- Statistics --------------------------------
+
+        async getStats(filter: IStatsFilter) {
+            try {
+                const response = await statsApi.getStats(filter, useUserStore().accessToken);
+                this.stats = response.data;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
     }
 })

@@ -3,7 +3,7 @@
         <div>
             <h1 class="cart-title">Корзина</h1>
             <div class="cart-product-list" style="display: flex;">
-                <div class="cart-product-list-content" v-auto-animate>
+                <div class="cart-product-list-content" v-auto-animate style="max-height: 80vh;" v-if="cartProducts.length > 0">
                     <CartProductCard 
                         v-for="product in cartProducts" 
                         :key="product.id" 
@@ -11,7 +11,10 @@
                         :cardItem="cartItems.find(item => item.productId === product.id)"
                     ></CartProductCard>
                 </div>
-                <div class="cart-product-list-total">
+                <div v-else class="cart-product-list-empty">
+                    <p>Корзина пуста</p>
+                </div>
+                <div class="cart-product-list-total" style="max-height: 100%;">
                     <v-form v-if="user" class="cart-user-info" fast-fail @submit.prevent="createOrder">
                         <div class="cart-user-info-item">
                             <p>Имя: <span style="font-weight: bold;">{{ user.name }}</span> <span class="error" v-if="!user.name">Необходимо заполнить</span></p>
@@ -45,6 +48,7 @@
     
     import type { IOrderCreate } from '../interfaces/OrderInterface';
     import { OrderStatusEnum } from '../interfaces/enums/OrderStatusEnum';
+    import router from '../router';
 
     const cartStore = useCartStore();
     const baseStore = useBaseStore();
@@ -80,7 +84,10 @@
     })
 
     const createOrder = async () => {
-        await orderStore.createOrder(orderCreate);
+        await orderStore.createOrder(orderCreate).then(() => {
+            cartStore.clearCart();
+            router.push({ name: 'UserOrders' });
+        });
     }
 
     onMounted(async () => {
@@ -104,6 +111,7 @@
 
     .cart-wrapper {
         padding: 30px;
+        max-height: 100vh;
     }
 
     .cart-title {
@@ -116,17 +124,29 @@
         gap: 20px;
     }
 
+    .cart-product-list-empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        opacity: 0.6;
+        width: 50%;
+    }
+
     .cart-product-list-content {
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 20px
+        gap: 20px;
+        height: 80%;
+        overflow-y: scroll;
     }
     
     .cart-product-list-total {
         flex: 1;        
         border: 1px solid #ccc;
         padding: 20px;
+        height: 270px;
     }
 
     .error {

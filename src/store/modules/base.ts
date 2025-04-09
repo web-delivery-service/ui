@@ -57,6 +57,7 @@ export const useBaseStore = defineStore('base-store', {
                         quantity: product.quantity,
                         cost: product.cost,
                         info: product.info,
+                        imageId: product.imageId,
                         categoryId: this.getCategoryById(product.categoryId)?.title,
                     }
                 })

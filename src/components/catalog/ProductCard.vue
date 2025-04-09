@@ -5,14 +5,14 @@
                 <h3>{{ product.title }}</h3>
             </div>
             <div class="product-card-image">
-                <!-- Изображение товара -->
+                <v-img v-if="product.imageId" :src="`${S3_URL}${product.imageId}${S3_ITEM_TYPE}`" aspect-ratio="1" cover></v-img>
             </div>
             <div class="product-card-info">
-                <div class="product-card-info">
-                    <p>{{ product.info }}</p>
+                <div class="product-card-info" v-if="product.info">
+                    <span style="font-weight: bold;">ОПИСАНИЕ:</span> {{ product.info }}
                 </div>
                 <div class="product-card-cost">
-                    <p>{{ product.cost }} руб.</p>
+                    <span style="font-weight: bold; margin-bottom: 10px;">ЦЕНА:</span> {{ product.cost }} руб.
                 </div>
                 <div class="product-card-quantity">
                     <p>Осталось: <span style="font-weight: 900;">{{ product.quantity }} шт</span></p>
@@ -35,6 +35,8 @@
     import type { IProduct } from '../../interfaces/ProductInterface';
     import { useUserStore } from '../../store/modules/user';
     import { useCartStore } from '../../store/modules/cart';
+
+    import { S3_URL, S3_ITEM_TYPE } from '../../lib/axios';
 
     import router from '../../router';
 
@@ -105,12 +107,28 @@
         border-radius: 10px;
     }
 
+    .product-card-title {
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    .product-card-image {
+        margin-bottom: 10px;
+    }
+
+    .product-card-quantity {
+        opacity: 0.7;
+        margin-top: 10px;
+    }
+
     .product-card-content {
         flex: 1;
+        margin-bottom: 40px;
     }
 
     .product-card-actions {
         margin-top: auto;
+        
     }
 
     .product-card-actions-to-cart {

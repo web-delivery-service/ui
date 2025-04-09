@@ -65,7 +65,6 @@
 <style scoped>
     .cart-product-card {
         position: relative;
-        min-height: 100px;
         border: 1px solid #ccc;
         padding: 10px;
         width: 90%;

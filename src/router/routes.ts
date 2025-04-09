@@ -64,6 +64,11 @@ const routes = [
                 name: 'Orders',
                 path: 'orders',
                 component: () => import('../views/admin/OrderView.vue'), 
+            },
+            {
+                name: 'Stats',
+                path: 'stats',
+                component: () => import('../views/admin/StatsView.vue'), 
             }
         ]
     }

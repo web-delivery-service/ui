@@ -36,13 +36,13 @@
                                 variant="text"
                                 color="primary"
                                 icon="mdi-pencil"
-                                @click="editCategory(product)"
+                                @click="editProduct(product)"
                             />
                             <v-btn
                                 variant="text"
                                 color="red"
                                 icon="mdi-delete"
-                                @click="deleteCategory(product.id)"
+                                @click="deleteProduct(product.id)"
                             />
                         </div>
                     </td>
@@ -116,11 +116,13 @@
         editDialog.value = false;
     }
 
-    const deleteCategory = async (productId: number) => {
-        await adminStore.deleteProduct(productId);
+    const deleteProduct = async (productId: number) => {
+        await adminStore.deleteProductImage(productId).then(() => {
+            adminStore.deleteProduct(productId);
+        })
     }
 
-    const editCategory = (product: IProduct) => {
+    const editProduct = (product: IProduct) => {
         editingProduct.value = product;
         editDialog.value = true;
     }

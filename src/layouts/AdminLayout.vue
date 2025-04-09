@@ -26,6 +26,7 @@
             adminStore.getOrders();
             adminStore.getCategories();
             adminStore.getProducts();
+            adminStore.getStats();
         });
     })
     

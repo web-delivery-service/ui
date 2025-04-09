@@ -53,7 +53,7 @@
 
                             <v-file-input
                                 v-model="imageFile"
-                                accept="image/png, image/jpeg, image/bmp, image/jpg"
+                                accept="image/png, image/jpeg, image/bmp, image/jpg, image/webp"
                                 label="Картинка"
                                 required
                                 clearable
