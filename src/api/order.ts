@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import type { IOrder, IOrderCreate } from '../interfaces/OrderInterface';
-import type { IOrderItem, IOrderItemCreate } from '../interfaces/OrderItemInterface';
+import type { IOrderItem } from '../interfaces/OrderItemInterface';
 
 import { OrderStatusEnum } from '../interfaces/enums/OrderStatusEnum';
 

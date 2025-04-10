@@ -95,7 +95,7 @@
     import type { IProductCreate } from '../../interfaces/ProductInterface';
     
     const props = defineProps<{
-        dialog: Boolean,
+        dialog: boolean,
     }>()
 
     const adminStore = useAdminStore();

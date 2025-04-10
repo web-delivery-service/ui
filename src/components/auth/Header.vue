@@ -1,7 +1,7 @@
 <template>
     <header class="header" style="background-color: white;">
         <div @click="goHome">
-            <img class="header-logo" src="../../../public/logo.png" width="44" alt="logo">
+            <img class="header-logo" src="/logo.png" width="44" alt="logo">
         </div>
         <div>
             <h1 style="opacity: 0.9">DELIVERY SERVICE</h1>

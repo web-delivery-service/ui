@@ -54,7 +54,7 @@
     import type { ICategoryCreate } from '../../interfaces/CategoryInterface';
     
     const props = defineProps<{
-        dialog: Boolean,
+        dialog: boolean,
     }>()
 
     const adminStore = useAdminStore();

@@ -1,7 +1,7 @@
 <template>
     <header class="header" style="background-color: white; z-index: 100;">
         <div @click="goHome">
-            <img style="cursor: pointer;" src="../../../public/logo.png" width="44" alt="logo">
+            <img style="cursor: pointer;" src="/logo.png" width="44" alt="logo">
         </div>
         <div style="display: flex; gap: 20px;">
             <h1 style="opacity: 0.9;">DELIVERY SERVICE</h1>
@@ -52,7 +52,7 @@
     onMounted(async() => {
         await userStore.getCurrentUser().then(() => {
             cartStore.getCart().then(() => {
-                orderStore.getOrdersByUserId(user.value.id);
+                orderStore.getOrdersByUserId();
             });
         });
     })
