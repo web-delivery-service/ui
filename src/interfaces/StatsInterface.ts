@@ -4,6 +4,8 @@ export interface IStats {
     
     orderQuantity: number;
     totalCost: number;
+
+    categoriesStats: Record<string, number>;
 }
 
 export interface IStatsFilter {

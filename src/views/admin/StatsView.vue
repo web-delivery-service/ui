@@ -7,6 +7,10 @@
                 <hr>
                 <h2><span style="opacity: 0.5;">Кол-во заказов:</span> {{ stats?.orderQuantity }}</h2>
                 <h2><span style="opacity: 0.5;">Общая сумма заказов:</span> {{ stats?.totalCost }} руб.</h2>
+                <hr>
+                <h2 v-for="(quantity, category) in stats?.categoriesStats">
+                    <span style="opacity: 0.5;">{{ category }}:</span> {{ quantity }}
+                </h2>
             </div>
             <div class="filter-form">
                 <v-form fast-fail @submit.prevent="getStats">
@@ -35,7 +39,7 @@
     })
 
     const adminStore = useAdminStore();
-    const { stats } = storeToRefs(adminStore);
+    const { stats, categories } = storeToRefs(adminStore);
 
     const getStats = async() => {
         await adminStore.getStats(filter);
@@ -46,6 +50,7 @@
         filter.endDate = null;
         await adminStore.getStats(filter);
     }
+
 
 </script>
 
